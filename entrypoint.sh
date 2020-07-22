@@ -2,8 +2,13 @@
 
 echo "Repository: $1"
 
+# log inputs
+echo "Inputs"
+echo "---------------------------------------------"
 RAW_REPOSITORIES="$INPUT_REPOSITORIES"
+echo "Repositories    : $RAW_REPOSITORIES"
 RAW_FILES="$INPUT_FILES"
+echo "Files           : $INPUT_FILES"
 GITHUB_TOKEN="$INPUT_TOKEN"
 REPOSITORIES=($RAW_REPOSITORIES)
 FILES=($RAW_FILES)
@@ -13,23 +18,20 @@ TEMP_PATH="/ghafs/"
 cd /
 mkdir "$TEMP_PATH"
 cd "$TEMP_PATH"
+echo "Temp Path       : $TEMP_PATH"
+echo "---------------------------------------------"
 
 # initalize git
+echo "Intiializing git"
 git config --system core.longpaths true
 git config --global core.longpaths true
 git config --global user.email "action-bot@github.com" && git config --global user.name "Github Action"
 
-# log inputs
-echo "Inputs"
-echo "---------------------------------------------"
-echo "Repositories    : $FILES"
-echo "Files           : $FILES"
-echo "Temp Path       : $TEMP_PATH"
-echo "---------------------------------------------"
+
 
 # loop through all the repos
 # for repository in "${REPOSITORIES[@]}"; do
-#     echo "$repository"
+#     echo "###[group] $repository"
 
 #     # clone the repo
 #     REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${repository}.git"
@@ -106,6 +108,6 @@ echo "---------------------------------------------"
 #     echo "Push changes to ${REPO_URL}"
 #     git push $REPO_URL
 #     cd $TEMP_PATH
-
+#     echo "###[endgroup]"
 #     echo "Completed $repository"
 # done
