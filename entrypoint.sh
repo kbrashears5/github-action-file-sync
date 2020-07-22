@@ -1,35 +1,33 @@
 #!/bin/sh -l
 
-echo "Hello $1"
-time=$(date)
-echo "::set-output name=time::$time"
+echo "Repository: $1"
 
-# RAW_REPOSITORIES="$INPUT_REPOSITORIES"
-# RAW_FILES="$INPUT_FILES"
-# GITHUB_TOKEN="$INPUT_TOKEN"
-# REPOSITORIES=($RAW_REPOSITORIES)
-# FILES=($RAW_FILES)
+RAW_REPOSITORIES="$INPUT_REPOSITORIES"
+RAW_FILES="$INPUT_FILES"
+GITHUB_TOKEN="$INPUT_TOKEN"
+REPOSITORIES=($RAW_REPOSITORIES)
+FILES=($RAW_FILES)
 
-# # set temp path
-# TEMP_PATH="/ghafs/"
-# cd /
-# mkdir "$TEMP_PATH"
-# cd "$TEMP_PATH"
+# set temp path
+TEMP_PATH="/ghafs/"
+cd /
+mkdir "$TEMP_PATH"
+cd "$TEMP_PATH"
 
-# # initalize git
-# git config --system core.longpaths true
-# git config --global core.longpaths true
-# git config --global user.email "action-bot@github.com" && git config --global user.name "Github Action"
+# initalize git
+git config --system core.longpaths true
+git config --global core.longpaths true
+git config --global user.email "action-bot@github.com" && git config --global user.name "Github Action"
 
-# # log inputs
-# echo "Inputs"
-# echo "---------------------------------------------"
-# echo "Repositories    : $FILES"
-# echo "Files           : $FILES"
-# echo "Temp Path       : $TEMP_PATH"
-# echo "---------------------------------------------"
+# log inputs
+echo "Inputs"
+echo "---------------------------------------------"
+echo "Repositories    : $FILES"
+echo "Files           : $FILES"
+echo "Temp Path       : $TEMP_PATH"
+echo "---------------------------------------------"
 
-# # loop through all the repos
+# loop through all the repos
 # for repository in "${REPOSITORIES[@]}"; do
 #     echo "$repository"
 
