@@ -6,12 +6,12 @@ echo "Repository: $1"
 echo "Inputs"
 echo "---------------------------------------------"
 RAW_REPOSITORIES="$INPUT_REPOSITORIES"
-echo "Repositories    : $RAW_REPOSITORIES"
 RAW_FILES="$INPUT_FILES"
-echo "Files           : $INPUT_FILES"
 GITHUB_TOKEN="$INPUT_TOKEN"
-REPOSITORIES=($RAW_REPOSITORIES)
-FILES=($RAW_FILES)
+read -a REPOSITORIES <<< $RAW_REPOSITORIES
+echo "Repositories    : $REPOSITORIES"
+read -a FILES <<< $RAW_FILES
+echo "Files           : $FILES"
 
 # set temp path
 TEMP_PATH="/ghafs/"
