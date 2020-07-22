@@ -43,7 +43,6 @@ for repository in "${REPOSITORIES[@]}"; do
   
     # loop through all files
     for file in "${FILES[@]}"; do
-        echo "###[group] $file"
         # split and trim
         FILE_TO_SYNC=($(echo $file | tr "=" "\n"))
         echo "File to sync: $FILE_TO_SYNC"
@@ -78,7 +77,7 @@ for repository in "${REPOSITORIES[@]}"; do
             fi
             
             # copy file
-            DEST_FULL_PATH = "${LOCAL_PATH}${DEST_FILE}"
+            DEST_FULL_PATH="${LOCAL_PATH}${DEST_FILE}"
             echo "Copying: $SOURCE_FULL_PATH to $DEST_FULL_PATH"
             cp "$SOURCE_FULL_PATH" "${DEST_FULL_PATH}"
             echo "Copied"
@@ -100,7 +99,6 @@ for repository in "${REPOSITORIES[@]}"; do
             echo "${SOURCE_FULL_PATH} not found in ${GITHUB_REPOSITORY}"
         fi
         echo " "
-        echo "###[endgroup]"
     done
 
     cd ${GIT_PATH}
