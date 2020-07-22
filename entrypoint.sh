@@ -21,6 +21,8 @@ cd "$TEMP_PATH"
 echo "Temp Path       : $TEMP_PATH"
 echo "---------------------------------------------"
 
+echo " "
+
 # initalize git
 echo "Intiializing git"
 git config --system core.longpaths true
@@ -70,9 +72,10 @@ for repository in "${REPOSITORIES[@]}"; do
         if [ "$SOURCE_FULL_PATH" != "" ]; then
             # test path to copy to
             DEST_FULL_PATH="${GIT_PATH}/${DEST_PATH}"
-            if [ ! -d "$DEST_FULL_PATH" ]; then
-                echo "Creating [$DEST_FULL_PATH]"
-                mkdir -p $DEST_FULL_PATH
+            DEST_FOLDER_PATH=$(dirname "$DEST_FULL_PATH")
+            if [ ! -d "$DEST_FOLDER_PATH" ]; then
+                echo "Creating [$DEST_FOLDER_PATH]"
+                mkdir -p $DEST_FOLDER_PATH
             fi
 
             # copy file
