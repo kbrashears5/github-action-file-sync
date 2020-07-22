@@ -1,4 +1,4 @@
-#!/bin/sh -l
+#!/bin/bash
 
 echo "Repository: $1"
 
@@ -8,9 +8,9 @@ echo "---------------------------------------------"
 RAW_REPOSITORIES="$INPUT_REPOSITORIES"
 RAW_FILES="$INPUT_FILES"
 GITHUB_TOKEN="$INPUT_TOKEN"
-read -a REPOSITORIES <<< $RAW_REPOSITORIES
+REPOSITORIES=($RAW_REPOSITORIES)
 echo "Repositories    : $REPOSITORIES"
-read -a FILES <<< $RAW_FILES
+FILES=($RAW_FILES)
 echo "Files           : $FILES"
 
 # set temp path
