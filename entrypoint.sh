@@ -41,7 +41,6 @@ for repository in "${REPOSITORIES[@]}"; do
     GIT_PATH="${TEMP_PATH}${repository}"
     echo "Cloning [$REPO_URL] to [$GIT_PATH]"
     git clone --quiet --no-hardlinks --no-tags --depth 1 $REPO_URL ${repository}
-    echo "Cloned"
 
     cd $GIT_PATH
   
@@ -89,7 +88,6 @@ for repository in "${REPOSITORIES[@]}"; do
             if [ "$(git status --porcelain)" != "" ]; then
                 echo "Committing changes"
                 git commit -m "File sync from ${GITHUB_REPOSITORY}"
-                echo "Committed"
             else
                 echo "Files not changed: [${SOURCE_FILE_NAME}]"
             fi
