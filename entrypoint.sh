@@ -77,15 +77,13 @@ for repository in "${REPOSITORIES[@]}"; do
             fi
             
             # copy file
-            DEST_FULL_PATH="${LOCAL_PATH}${DEST_FILE}"
+            DEST_FULL_PATH="${LOCAL_PATH}/${DEST_FILE}"
             echo "Copying: $SOURCE_FULL_PATH to $DEST_FULL_PATH"
             cp "$SOURCE_FULL_PATH" "${DEST_FULL_PATH}"
-            echo "Copied"
             
             # add file
             echo "Git add for $DEST_FULL_PATH"
             git add "${DEST_FULL_PATH}" -f
-            echo "Added"
 
             # check if anything is new
             if [ "$(git status --porcelain)" != "" ]; then
