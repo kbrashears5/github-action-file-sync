@@ -1,0 +1,23 @@
+name: 'Github Action File Sync'
+description: 'Github Action to sync files across repositories'
+author: 'kbrashears5'
+inputs:
+  REPOSITORIES:
+    description: 'Github repositories to sync files to'
+    default: ''
+    required: true
+  FILES:
+    description: 'Files to sync to repositories'
+    default: ''
+    required: true
+  TOKEN:
+    description: "Personal access token with Repo privileges"
+    required: true
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.REPOSITORIES }}
+    - ${{ inputs.FILES }}
+    - ${{ inputs.TOKEN }}
