@@ -28,6 +28,8 @@ git config --global core.longpaths true
 git config --global user.email "action-bot@github.com" && git config --global user.name "Github Action"
 echo "Git initialized"
 
+echo " "
+
 # loop through all the repos
 for repository in "${REPOSITORIES[@]}"; do
     echo "###[group] $repository"
@@ -86,7 +88,7 @@ for repository in "${REPOSITORIES[@]}"; do
                 git commit -m "File sync from ${GITHUB_REPOSITORY}"
                 echo "Committed"
             else
-                echo "Files not changed: [${SOURCE_FILE}]"
+                echo "Files not changed: [${SOURCE_FILE_NAME}]"
             fi
         else
             echo "[${SOURCE_FULL_PATH}] not found in [${GITHUB_REPOSITORY}]"
