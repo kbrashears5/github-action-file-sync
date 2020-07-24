@@ -1,4 +1,4 @@
-name: 'Github Action File Sync'
+name: 'File Sync'
 description: 'Github Action to sync files across repositories'
 author: 'kbrashears5'
 branding:
