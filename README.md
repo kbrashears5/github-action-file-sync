@@ -39,7 +39,7 @@ jobs:
       - name: Fetching Local Repository
         uses: actions/checkout@master
       - name: File Sync
-        uses: kbrashears5/github-action-file-sync@master
+        uses: kbrashears5/github-action-file-sync@v2.0.0
         with:
           REPOSITORIES: |
             username/repo@master
