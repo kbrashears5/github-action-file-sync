@@ -18,6 +18,8 @@ This also isn't limited to Github Action yaml files - another use case could be 
 
 If I have a file that gets out of sync for whatever reason, the cron side of the `on` will take care of putting it back in sync with the master repository.
 
+See my [master sync repo](https://github.com/kbrashears5/kbrashears5) for examples on how I use it across all my repositories.
+
 # Setup
 Create a new file called `/.github/workflows/file-sync.yml` that looks like so:
 ```yaml
@@ -40,19 +42,31 @@ jobs:
         uses: kbrashears5/github-action-file-sync@master
         with:
           REPOSITORIES: |
-            username/repo
+            username/repo@master
           FILES: |
             ./sync/dependabot.yml=.github/dependabot.yml
           TOKEN: ${{ secrets.ACTIONS }}
 ```
-### Parameters
+## Parameters
 | Parameter | Required | Description |
 | --- | --- | --- |
-| REPOSITORIES | true | List of repositories to sync the files to |
+| REPOSITORIES | true | List of repositories to sync the files to. Optionally provide branch name |
 | FILES | true | List of files to sync across repositories. See below for details |
-| TOKEN | true | Personal Access Token with Repo scope
+| TOKEN | true | Personal Access Token with Repo scope |
 
-### Examples
+## Examples
+### REPOSITORIES parameter
+Push to the `master` branch
+```yaml
+REPOSITORIES: |
+    username/repo
+```
+Push to the `dev` branch
+```yaml
+REPOSITORIES: |
+    username/repo@dev
+```
+### FILES parameter
 Root file with root destination
 ```yaml
 FILES: |
@@ -72,4 +86,9 @@ Nested file with new destination
 ```yaml
 FILES: |
     ./sync/dependabot.yml=.github/dependabot.yml
+```
+### TOKEN parameter
+Use the repository secret named `ACTIONS`
+```yaml
+TOKEN: ${{ secrets.ACTIONS }}
 ```

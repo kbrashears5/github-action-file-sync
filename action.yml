@@ -6,15 +6,13 @@ branding:
   color: 'purple'
 inputs:
   REPOSITORIES:
-    description: 'Github repositories to sync files to'
-    default: ''
+    description: 'Github repositories to sync files to. Optionally provide a branch with @branchName after the repo name. Default is master'
     required: true
   FILES:
     description: 'Files to sync to repositories'
-    default: ''
     required: true
   TOKEN:
-    description: "Personal access token with Repo privileges"
+    description: 'Personal access token with Repo privileges'
     required: true
 
 runs:

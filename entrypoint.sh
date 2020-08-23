@@ -36,13 +36,31 @@ echo " "
 for repository in "${REPOSITORIES[@]}"; do
     echo "###[group] $repository"
 
+    # determine repo name
+    REPO_INFO=($(echo $repository | tr "@" "\n"))
+    REPO_NAME=${REPO_INFO[0]}
+    echo "Repository name: [$REPO_NAME]"
+    
+    # determine branch name
+    BRANCH_NAME="master"
+    if [ ${REPO_INFO[1]+yes} ]; then
+        BRANCH_NAME="${REPO_INFO[1]}"
+    fi
+    echo "Branch: [$BRANCH_NAME]"
+
     # clone the repo
-    REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${repository}.git"
-    GIT_PATH="${TEMP_PATH}${repository}"
+    REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${REPO_NAME}.git"
+    GIT_PATH="${TEMP_PATH}${REPO_NAME}"
     echo "Cloning [$REPO_URL] to [$GIT_PATH]"
-    git clone --quiet --no-hardlinks --no-tags --depth 1 $REPO_URL ${repository}
+    git clone --quiet --no-hardlinks --no-tags --depth 1 $REPO_URL $REPO_NAME
 
     cd $GIT_PATH
+
+    # checkout the branch, if specified
+    if [ "$BRANCH_NAME" != "master" ]; then
+        # try to check out the origin, if fails, then create the local branch
+        git fetch && git checkout $BRANCH_NAME || git checkout -b $BRANCH_NAME
+    fi
   
     # loop through all files
     for file in "${FILES[@]}"; do
@@ -103,6 +121,7 @@ for repository in "${REPOSITORIES[@]}"; do
     echo "Push changes to [${REPO_URL}]"
     git push $REPO_URL
     cd $TEMP_PATH
-    echo "Completed $repository"
+    rm -rf $REPO_NAME
+    echo "Completed [${REPO_NAME}]"
     echo "###[endgroup]"
 done
