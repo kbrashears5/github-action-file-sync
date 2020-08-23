@@ -1,9 +1,14 @@
 <h1 align="center">github-action-file-sync</h1>
 
+
 <div align="center">
-    
+
 <b>Github Action to sync files across repos</b>
+
+[![version](https://img.shields.io/github/v/release/kbrashears5/github-action-file-sync)](https://img.shields.io/github/v/release/kbrashears5/github-action-file-sync)
+
 </div>
+
 
 # Use Cases
 Great for keeping your files in sync across multiple repositories. A good use case for me was the `.github/dependabot.yml` files.
