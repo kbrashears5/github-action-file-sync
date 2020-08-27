@@ -58,6 +58,7 @@ jobs:
 | REPOSITORIES | true | List of repositories to sync the files to. Optionally provide branch name |
 | FILES | true | List of files to sync across repositories. See below for details |
 | TOKEN | true | Personal Access Token with Repo scope |
+| PULL_REQUEST | false | Whether or not you want to do a pull request. Only works when branch name is provided. Default false |
 
 ## Examples
 ### REPOSITORIES parameter

@@ -14,6 +14,10 @@ inputs:
   TOKEN:
     description: 'Personal access token with Repo privileges'
     required: true
+  PULL_REQUEST:
+    description: 'Whether or not to submit a pull request. Only works if branch is not master'
+    required: false
+    default: false
 
 runs:
   using: 'docker'
