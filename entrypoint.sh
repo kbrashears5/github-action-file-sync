@@ -66,6 +66,7 @@ for repository in "${REPOSITORIES[@]}"; do
   
     # loop through all files
     for file in "${FILES[@]}"; do
+        echo "File: [${file}]"
         # split and trim
         FILE_TO_SYNC=($(echo $file | tr "=" "\n"))
         SOURCE_PATH=${FILE_TO_SYNC[0]}
