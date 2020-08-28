@@ -89,12 +89,12 @@ FILES: |
 Nested file with same nested file structure destination
 ```yaml
 FILES: |
-    /.github/dependabot.yml
+    .github/dependabot.yml
 ```
 Nested file with new destination
 ```yaml
 FILES: |
-    /sync/dependabot.yml=.github/dependabot.yml
+    sync/dependabot.yml=.github/dependabot.yml
 ```
 
 <u>Folder Sync</u>
@@ -102,12 +102,12 @@ FILES: |
 Root folder to root directory
 ```yaml
 FILES: |
-    ./sync
+    sync
 ```
 Root folder with new directory
 ```yaml
 FILES: |
-    ./sync=newFolderName
+    sync/=newFolderName/
 ```
 ### TOKEN parameter
 Use the repository secret named `ACTIONS`
@@ -116,6 +116,7 @@ TOKEN: ${{ secrets.ACTIONS }}
 ```
 
 ## Troubleshooting
+### Spacing
 Spacing around the equal sign is important. For example, this will not work:
 ```yaml
 FILES: |
@@ -131,3 +132,8 @@ instead of 1 object
 - folder/file-sync.yml = folder/test.txt
 
 and there is nothing I can do in code to make up for that
+
+### Slashes
+You do not need (nor want) leading `/` for the file path on either side of the equal sign
+
+The only time you need `/` trailing is for folder copies. While a file copy will technically still work with a leading `/`, a folder copy will not

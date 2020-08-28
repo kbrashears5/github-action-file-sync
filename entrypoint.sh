@@ -102,7 +102,7 @@ for repository in "${REPOSITORIES[@]}"; do
 
             # copy file
             echo "Copying: [$SOURCE_FULL_PATH] to [$DEST_FULL_PATH]"
-            cp "${SOURCE_FULL_PATH}" "${DEST_FULL_PATH}"
+            cp "${SOURCE_FULL_PATH}" "${DEST_FULL_PATH}" -r
             
             # add file
             git add "${DEST_FULL_PATH}" -f
