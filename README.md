@@ -49,7 +49,7 @@ jobs:
           REPOSITORIES: |
             username/repo@master
           FILES: |
-            ./sync/dependabot.yml=.github/dependabot.yml
+            sync/dependabot.yml=.github/dependabot.yml
           TOKEN: ${{ secrets.ACTIONS }}
 ```
 ## Parameters
@@ -89,12 +89,12 @@ FILES: |
 Nested file with same nested file structure destination
 ```yaml
 FILES: |
-    ./.github/dependabot.yml
+    /.github/dependabot.yml
 ```
 Nested file with new destination
 ```yaml
 FILES: |
-    ./sync/dependabot.yml=.github/dependabot.yml
+    /sync/dependabot.yml=.github/dependabot.yml
 ```
 
 <u>Folder Sync</u>
@@ -114,3 +114,20 @@ Use the repository secret named `ACTIONS`
 ```yaml
 TOKEN: ${{ secrets.ACTIONS }}
 ```
+
+## Troubleshooting
+Spacing around the equal sign is important. For example, this will not work:
+```yaml
+FILES: |
+  folder/file-sync.yml = folder/test.txt
+```
+It passes to the shell file 3 distinct objects
+- folder/file-sync.ymll
+- =
+- folder/test.txt
+
+instead of 1 object
+
+- folder/file-sync.yml = folder/test.txt
+
+and there is nothing I can do in code to make up for that

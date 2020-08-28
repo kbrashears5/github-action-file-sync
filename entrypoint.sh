@@ -63,6 +63,8 @@ for repository in "${REPOSITORIES[@]}"; do
         # try to check out the origin, if fails, then create the local branch
         git fetch && git checkout $BRANCH_NAME && git pull || git checkout -b $BRANCH_NAME
     fi
+
+    echo " "
   
     # loop through all files
     for file in "${FILES[@]}"; do
@@ -102,6 +104,8 @@ for repository in "${REPOSITORIES[@]}"; do
             echo "Copying: [$SOURCE_FULL_PATH] to [$DEST_FULL_PATH]"
             SP_TRIM="$(echo -e "${SOURCE_FULL_PATH}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
             DP_TRIM="$(echo -e "${DEST_FULL_PATH}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+            echo "Trimmed source path: [${SP_TRIM}]"
+            echo "Trimmed destination path: [${DP_TRIM}]"
             cp "${SP_TRIM}" "${DP_TRIM}"
             
             # add file
