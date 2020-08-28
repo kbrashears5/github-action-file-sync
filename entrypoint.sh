@@ -102,11 +102,7 @@ for repository in "${REPOSITORIES[@]}"; do
 
             # copy file
             echo "Copying: [$SOURCE_FULL_PATH] to [$DEST_FULL_PATH]"
-            SP_TRIM="$(echo -e "${SOURCE_FULL_PATH}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-            DP_TRIM="$(echo -e "${DEST_FULL_PATH}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-            echo "Trimmed source path: [${SP_TRIM}]"
-            echo "Trimmed destination path: [${DP_TRIM}]"
-            cp "${SP_TRIM}" "${DP_TRIM}"
+            cp "${SOURCE_FULL_PATH}" "${DEST_FULL_PATH}"
             
             # add file
             git add "${DEST_FULL_PATH}" -f
