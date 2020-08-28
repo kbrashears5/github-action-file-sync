@@ -26,3 +26,4 @@ runs:
     - ${{ inputs.REPOSITORIES }}
     - ${{ inputs.FILES }}
     - ${{ inputs.TOKEN }}
+    - ${{ inputs.PULL_REQUEST }}
