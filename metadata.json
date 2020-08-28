@@ -1,0 +1,10 @@
+{
+    "description": "Github Action to sync files across repositories",
+    "homepage": "https://github.com/kbrashears5/github-action-file-sync",
+    "keywords": [
+        "sync",
+        "repo",
+        "files",
+        "utilities"
+    ]
+}
