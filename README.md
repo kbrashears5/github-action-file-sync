@@ -73,6 +73,9 @@ REPOSITORIES: |
     username/repo@dev
 ```
 ### FILES parameter
+
+<u>File sync</u>
+
 Root file with root destination
 ```yaml
 FILES: |
@@ -92,6 +95,19 @@ Nested file with new destination
 ```yaml
 FILES: |
     ./sync/dependabot.yml=.github/dependabot.yml
+```
+
+<u>Folder Sync</u>
+
+Root folder to root directory
+```yaml
+FILES: |
+    ./sync
+```
+Root folder with new directory
+```yaml
+FILES: |
+    ./sync=newFolderName
 ```
 ### TOKEN parameter
 Use the repository secret named `ACTIONS`
