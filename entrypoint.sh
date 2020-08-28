@@ -61,7 +61,7 @@ for repository in "${REPOSITORIES[@]}"; do
     # checkout the branch, if specified
     if [ "$BRANCH_NAME" != "master" ]; then
         # try to check out the origin, if fails, then create the local branch
-        git fetch && git checkout $BRANCH_NAME || git checkout -b $BRANCH_NAME
+        git fetch && git checkout $BRANCH_NAME && git pull || git checkout -b $BRANCH_NAME
     fi
   
     # loop through all files
