@@ -1,0 +1,35 @@
+# define pipeline number (https://docs.microsoft.com/en-us/azure/devops/pipelines/build/options?view=azure-devops&tabs=yaml#build-number-format)
+name: 1.0$(Rev:.r)
+
+# define resources (https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=example#repository-resource)
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      name: kbrashears5/yaml
+      endpoint: kbrashears5
+
+# define build triggers (https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=example#trigger)
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - entrypoint.sh
+
+# define pull request triggers (https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/github?view=azure-devops&tabs=yaml#pr-triggers)
+pr:
+  autoCancel: true
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - entrypoint.sh
+
+# build and create npm package (https://github.com/kbrashears5/yaml/blob/master/templates/build-node.yml)
+stages:
+- template: templates/build-shell.yml@templates
+  parameters:
+    scriptPath: 'entrypoint.sh'
