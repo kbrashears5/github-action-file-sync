@@ -6,6 +6,7 @@
 <b>Github Action to sync files across repos</b>
 
 [![version](https://img.shields.io/github/v/release/kbrashears5/github-action-file-sync)](https://img.shields.io/github/v/release/kbrashears5/github-action-file-sync)
+[![Build Status](https://dev.azure.com/kbrashears5/github/_apis/build/status/kbrashears5.github-action-file-sync?branchName=master)](https://dev.azure.com/kbrashears5/github/_build/latest?definitionId=28&branchName=master)
 
 </div>
 
