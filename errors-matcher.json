@@ -1,0 +1,31 @@
+{
+    "problemMatcher": [
+        {
+            "owner": "error1",
+            "pattern": [
+                {
+                    "regexp": "^(.*error: .*)$",
+                    "message": 1
+                }
+            ]
+        },
+        {
+            "owner": "error2",
+            "pattern": [
+                {
+                    "regexp": "^.*(\\[remote rejected\\] .*)$",
+                    "message": 1
+                }
+            ]
+        },
+        {
+            "owner": "error3",
+            "pattern": [
+                {
+                    "regexp": "^.*(cp: can't stat .*)$",
+                    "message": 1
+                }
+            ]
+        }
+    ]
+}

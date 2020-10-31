@@ -1,5 +1,14 @@
 #!/bin/bash
 
+STATUS=0
+
+# remember last error code
+trap 'STATUS=$?' ERR
+
+# problem matcher must exist in workspace
+cp /errors-matcher.json $HOME/file-sync-errors-matcher.json
+echo "::add-matcher::$HOME/file-sync-errors-matcher.json"
+
 echo "Repository: [$GITHUB_REPOSITORY]"
 
 # log inputs
@@ -36,13 +45,13 @@ echo " "
 
 # loop through all the repos
 for repository in "${REPOSITORIES[@]}"; do
-    echo "###[group] $repository"
+    echo "::group::$repository"
 
     # determine repo name
     REPO_INFO=($(echo $repository | tr "@" "\n"))
     REPO_NAME=${REPO_INFO[0]}
     echo "Repository name: [$REPO_NAME]"
-    
+
     # determine branch name
     BRANCH_NAME="master"
     if [ ${REPO_INFO[1]+yes} ]; then
@@ -65,7 +74,7 @@ for repository in "${REPOSITORIES[@]}"; do
     fi
 
     echo " "
-  
+
     # loop through all files
     for file in "${FILES[@]}"; do
         echo "File: [${file}]"
@@ -73,7 +82,7 @@ for repository in "${REPOSITORIES[@]}"; do
         FILE_TO_SYNC=($(echo $file | tr "=" "\n"))
         SOURCE_PATH=${FILE_TO_SYNC[0]}
         echo "Source path: [$SOURCE_PATH]"
-        
+
         # initialize the full path
         SOURCE_FULL_PATH="${GITHUB_WORKSPACE}/${SOURCE_PATH}"
         echo "Source full path: [$SOURCE_FULL_PATH]"
@@ -103,7 +112,7 @@ for repository in "${REPOSITORIES[@]}"; do
             # copy file
             echo "Copying: [$SOURCE_FULL_PATH] to [$DEST_FULL_PATH]"
             cp "${SOURCE_FULL_PATH}" "${DEST_FULL_PATH}" -r
-            
+
             # add file
             git add "${DEST_FULL_PATH}" -f
 
@@ -137,5 +146,7 @@ for repository in "${REPOSITORIES[@]}"; do
     cd $TEMP_PATH
     rm -rf $REPO_NAME
     echo "Completed [${REPO_NAME}]"
-    echo "###[endgroup]"
+    echo "::endgroup::"
 done
+
+exit $STATUS

@@ -22,8 +22,3 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.REPOSITORIES }}
-    - ${{ inputs.FILES }}
-    - ${{ inputs.TOKEN }}
-    - ${{ inputs.PULL_REQUEST }}
