@@ -6,8 +6,8 @@ STATUS=0
 trap 'STATUS=$?' ERR
 
 # problem matcher must exist in workspace
-cp /errors-matcher.json $HOME/file-sync-errors-matcher.json
-echo "::add-matcher::$HOME/file-sync-errors-matcher.json"
+cp /error-matcher.json $HOME/file-sync-error-matcher.json
+echo "::add-matcher::$HOME/file-sync-error-matcher.json"
 
 echo "Repository: [$GITHUB_REPOSITORY]"
 
