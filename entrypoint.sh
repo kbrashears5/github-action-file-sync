@@ -139,6 +139,7 @@ for repository in "${REPOSITORIES[@]}"; do
         jq -n --arg title "File sync from ${GITHUB_REPOSITORY}" --arg head "$BRANCH_NAME" --arg base "master" '{title:$title,head:$head,base:$base}' | curl -d @- \
             -H "Accept: application/vnd.github.v3+json" \
             -u ${USERNAME}:${GITHUB_TOKEN} \
+            --silent \
             ${GITHUB_API_URL}/repos/${REPO_NAME}/pulls
     fi
     cd $TEMP_PATH
