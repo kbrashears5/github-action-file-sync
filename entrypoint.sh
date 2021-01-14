@@ -137,11 +137,9 @@ for repository in "${REPOSITORIES[@]}"; do
     if [ "$BRANCH_NAME" != "master" -a "$PULL_REQUEST" == "true" ]; then
         echo "Creating pull request"
         jq -n --arg title "File sync from ${GITHUB_REPOSITORY}" --arg head "$BRANCH_NAME" --arg base "master" '{title:$title,head:$head,base:$base}' | curl -d @- \
-            -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -u ${USERNAME}:${GITHUB_TOKEN} \
-            --silent \
-            ${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/pulls
+            ${GITHUB_API_URL}/repos/${REPO_NAME}/pulls
     fi
     cd $TEMP_PATH
     rm -rf $REPO_NAME
