@@ -20,7 +20,7 @@ If I need to make a change, rather than go make a change x many times across all
 
 Another example is if you're creating new Github Actions for a repository, you can make them once, check them into master repository, and then deploy them all across all your repositories all at once. 
 
-This also isn't limited to Github Action yaml files - another use case could be keeping the `.editorconfig`, `LICENSE`, `tsconfig.json`, `tslint.json`, `.gitignore`, `azure-pieplines.yml`, etc. in sync across all your repositories.
+This also isn't limited to Github Action yaml files - another use case could be keeping the `.editorconfig`, `LICENSE`, `tsconfig.json`, `eslintrc.yml`, `.gitignore`, `azure-pieplines.yml`, etc. in sync across all your repositories.
 
 If I have a file that gets out of sync for whatever reason, the cron side of the `on` will take care of putting it back in sync with the master repository.
 
