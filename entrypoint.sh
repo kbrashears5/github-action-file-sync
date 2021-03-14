@@ -52,12 +52,16 @@ for repository in "${REPOSITORIES[@]}"; do
     REPO_NAME=${REPO_INFO[0]}
     echo "Repository name: [$REPO_NAME]"
 
+    echo "Determining default branch name"
+    DEFAULT_BRANCH_NAME=$(curl -X GET -H "Accept: application/vnd.github.v3+json" --silent "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}" | jq '.default_branch')
+    echo "Default branch name: [$DEFAULT_BRANCH_NAME]"
+
     # determine branch name
-    echo "Determining branch name"
+    echo "Determining instructed branch name"
     if [ ${REPO_INFO[1]+yes} ]; then
         BRANCH_NAME="${REPO_INFO[1]}"
     else
-        BRANCH_NAME=$(curl -X GET -H "Accept: application/vnd.github.v3+json" --silent "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}" | jq '.default_branch')
+        BRANCH_NAME=$DEFAULT_BRANCH_NAME
     fi
     echo "Branch: [$BRANCH_NAME]"
 
@@ -69,8 +73,11 @@ for repository in "${REPOSITORIES[@]}"; do
 
     cd $GIT_PATH
 
-    # try to check out the origin, if fails, then create the local branch
-    git fetch && git checkout $BRANCH_NAME && git pull || git checkout -b $BRANCH_NAME
+    # checkout the branch, if specified
+    if [ "$BRANCH_NAME" != "$DEFAULT_BRANCH_NAME" ]; then
+        # try to check out the origin, if fails, then create the local branch
+        git fetch && git checkout $BRANCH_NAME && git pull || git checkout -b $BRANCH_NAME
+    fi
 
     echo " "
 
