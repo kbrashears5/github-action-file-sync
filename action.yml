@@ -6,7 +6,7 @@ branding:
   color: 'purple'
 inputs:
   REPOSITORIES:
-    description: 'Github repositories to sync files to. Optionally provide a branch with @branchName after the repo name. Default is master'
+    description: 'Github repositories to sync files to. Optionally provide a branch with @branchName after the repo name. Default is default branch of repository'
     required: true
   FILES:
     description: 'Files to sync to repositories'
@@ -14,10 +14,10 @@ inputs:
   TOKEN:
     description: 'Personal access token with Repo privileges'
     required: true
-  PULL_REQUEST:
-    description: 'Whether or not to submit a pull request. Only works if branch is not master'
+  PULL_REQUEST_BRANCH_NAME:
+    description: 'Branch name to submit pull request to'
     required: false
-    default: 'false'
+    default: ''
 
 runs:
   using: 'docker'

@@ -35,7 +35,7 @@ echo "---------------------------------------------"
 echo " "
 
 # initalize git
-echo "Intiializing git"
+echo "Initializing git"
 git config --system core.longpaths true
 git config --global core.longpaths true
 git config --global user.email "action-bot@github.com" && git config --global user.name "Github Action"
@@ -53,9 +53,11 @@ for repository in "${REPOSITORIES[@]}"; do
     echo "Repository name: [$REPO_NAME]"
 
     # determine branch name
-    BRANCH_NAME="master"
+    echo "Determining branch name"
     if [ ${REPO_INFO[1]+yes} ]; then
         BRANCH_NAME="${REPO_INFO[1]}"
+    else
+        BRANCH_NAME=$(curl -X GET -H "Accept: application/vnd.github.v3+json" --silent "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}" | jq '.default_branch')
     fi
     echo "Branch: [$BRANCH_NAME]"
 
@@ -67,11 +69,8 @@ for repository in "${REPOSITORIES[@]}"; do
 
     cd $GIT_PATH
 
-    # checkout the branch, if specified
-    if [ "$BRANCH_NAME" != "master" ]; then
-        # try to check out the origin, if fails, then create the local branch
-        git fetch && git checkout $BRANCH_NAME && git pull || git checkout -b $BRANCH_NAME
-    fi
+    # try to check out the origin, if fails, then create the local branch
+    git fetch && git checkout $BRANCH_NAME && git pull || git checkout -b $BRANCH_NAME
 
     echo " "
 
@@ -134,9 +133,9 @@ for repository in "${REPOSITORIES[@]}"; do
     # push changes
     echo "Push changes to [${REPO_URL}]"
     git push $REPO_URL
-    if [ "$BRANCH_NAME" != "master" -a "$PULL_REQUEST" == "true" ]; then
-        echo "Creating pull request"
-        jq -n --arg title "File sync from ${GITHUB_REPOSITORY}" --arg head "$BRANCH_NAME" --arg base "master" '{title:$title,head:$head,base:$base}' | curl -d @- \
+    if [ -z "$PULL_REQUEST_BRANCH_NAME" -a "$BRANCH_NAME" != "$PULL_REQUEST_BRANCH_NAME" ]; then
+        echo "Creating pull request from [$BRANCH_NAME] into [$PULL_REQUEST_BRANCH_NAME]"
+        jq -n --arg title "File sync from ${GITHUB_REPOSITORY}" --arg head "$BRANCH_NAME" --arg base $PULL_REQUEST_BRANCH_NAME '{title:$title,head:$head,base:$base}' | curl -d @- \
             -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -u ${USERNAME}:${GITHUB_TOKEN} \
