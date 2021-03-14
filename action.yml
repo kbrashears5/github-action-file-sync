@@ -6,7 +6,7 @@ branding:
   color: 'purple'
 inputs:
   REPOSITORIES:
-    description: 'Github repositories to sync files to. Optionally provide a branch with @branchName after the repo name. Default is default branch of repository'
+    description: 'Github repositories to sync files to. Optionally provide a branch with @branchName after the repo name. Default is default branch of the repository'
     required: true
   FILES:
     description: 'Files to sync to repositories'
