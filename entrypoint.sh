@@ -76,7 +76,7 @@ for repository in "${REPOSITORIES[@]}"; do
     # checkout the branch, if specified
     if [ "$BRANCH_NAME" != "$DEFAULT_BRANCH_NAME" ]; then
         # try to check out the origin, if fails, then create the local branch
-        git fetch && git checkout "$BRANCH_NAME" && git pull || git checkout -b "$BRANCH_NAME"
+        git fetch && echo "fetched" && git checkout "$BRANCH_NAME" && echo "checked out" && git pull || git checkout -b "$BRANCH_NAME"
     fi
 
     echo " "
@@ -140,7 +140,7 @@ for repository in "${REPOSITORIES[@]}"; do
     # push changes
     echo "Push changes to [${REPO_URL}]"
     git push $REPO_URL
-    if [ ! -z "$PULL_REQUEST_BRANCH_NAME" -a "$BRANCH_NAME" != "$PULL_REQUEST_BRANCH_NAME" ]; then
+    if [ -z "$PULL_REQUEST_BRANCH_NAME" -a "$BRANCH_NAME" != "$PULL_REQUEST_BRANCH_NAME" ]; then
         echo "Creating pull request from [$BRANCH_NAME] into [$PULL_REQUEST_BRANCH_NAME]"
         jq -n --arg title "File sync from ${GITHUB_REPOSITORY}" --arg head "$BRANCH_NAME" --arg base $PULL_REQUEST_BRANCH_NAME '{title:$title,head:$head,base:$base}' | curl -d @- \
             -X POST \
