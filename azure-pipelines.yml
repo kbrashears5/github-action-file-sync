@@ -1,5 +1,5 @@
 # define pipeline number (https://docs.microsoft.com/en-us/azure/devops/pipelines/build/options?view=azure-devops&tabs=yaml#build-number-format)
-name: 1.0$(Rev:.r)
+name: 2.0$(Rev:.r)
 
 # define resources (https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=example#repository-resource)
 resources:
