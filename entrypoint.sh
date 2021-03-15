@@ -69,14 +69,14 @@ for repository in "${REPOSITORIES[@]}"; do
     REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${REPO_NAME}.git"
     GIT_PATH="${TEMP_PATH}${REPO_NAME}"
     echo "Cloning [$REPO_URL] to [$GIT_PATH]"
-    git clone --quiet --no-hardlinks --no-tags --depth 1 $REPO_URL $REPO_NAME
+    git clone --quiet --no-hardlinks --no-tags --depth 1 $REPO_URL $GIT_PATH
 
     cd $GIT_PATH
 
     # checkout the branch, if specified
     if [ "$BRANCH_NAME" != "$DEFAULT_BRANCH_NAME" ]; then
         # try to check out the origin, if fails, then create the local branch
-        git fetch && echo "fetched" && git checkout "$BRANCH_NAME" && echo "checked out" && git pull || git checkout -b "$BRANCH_NAME"
+        git fetch && git checkout -b "$BRANCH_NAME" origin/"$BRANCH_NAME" || git checkout -b "$BRANCH_NAME"
     fi
 
     echo " "
