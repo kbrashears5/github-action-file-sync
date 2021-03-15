@@ -21,8 +21,8 @@ REPOSITORIES=($RAW_REPOSITORIES)
 echo "Repositories    : $REPOSITORIES"
 FILES=($RAW_FILES)
 echo "Files           : $FILES"
-PULL_REQUEST="$INPUT_PULL_REQUEST"
-echo "Pull request    : $PULL_REQUEST"
+PULL_REQUEST_BRANCH_NAME="$INPUT_PULL_REQUEST_BRANCH_NAME"
+echo "Pull request    : $PULL_REQUEST_BRANCH_NAME"
 
 # set temp path
 TEMP_PATH="/ghafs/"
