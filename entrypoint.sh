@@ -38,7 +38,7 @@ echo " "
 echo "Initializing git"
 git config --system core.longpaths true
 git config --global core.longpaths true
-git config --global user.email "action-bot@github.com" && git config --global user.name "Github Action"
+git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com" && git config --global user.name "github-actions[bot]"
 echo "Git initialized"
 
 echo " "
