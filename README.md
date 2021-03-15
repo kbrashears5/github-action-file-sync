@@ -59,7 +59,7 @@ jobs:
 | REPOSITORIES | true | List of repositories to sync the files to. Optionally provide branch name |
 | FILES | true | List of files to sync across repositories. See below for details |
 | TOKEN | true | Personal Access Token with Repo scope |
-| PULL_REQUEST | false | Whether or not you want to do a pull request. Only works when branch name is provided. Default false |
+| PULL_REQUEST_BRANCH_NAME | false | Branch name of branch to do pull request into. Default is no pull request opened |
 
 ## Examples
 ### REPOSITORIES parameter
@@ -110,6 +110,12 @@ Root folder with new directory
 FILES: |
     sync/=newFolderName/
 ```
+### PULL_REQUEST_BRANCH_NAME parameter
+Specify branch name to create pull request against
+```yaml
+PULL_REQUEST_BRANCH_NAME: main
+```
+
 ### TOKEN parameter
 Use the repository secret named `ACTIONS`
 ```yaml
