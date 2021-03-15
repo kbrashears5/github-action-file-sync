@@ -21,8 +21,8 @@ REPOSITORIES=($RAW_REPOSITORIES)
 echo "Repositories    : $REPOSITORIES"
 FILES=($RAW_FILES)
 echo "Files           : $FILES"
-PULL_REQUEST="$INPUT_PULL_REQUEST"
-echo "Pull request    : $PULL_REQUEST"
+PULL_REQUEST_BRANCH_NAME="$INPUT_PULL_REQUEST_BRANCH_NAME"
+echo "Pull request    : $PULL_REQUEST_BRANCH_NAME"
 
 # set temp path
 TEMP_PATH="/ghafs/"
@@ -35,10 +35,10 @@ echo "---------------------------------------------"
 echo " "
 
 # initalize git
-echo "Intiializing git"
+echo "Initializing git with github-actions[bot]"
 git config --system core.longpaths true
 git config --global core.longpaths true
-git config --global user.email "action-bot@github.com" && git config --global user.name "Github Action"
+git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com" && git config --global user.name "github-actions[bot]"
 echo "Git initialized"
 
 echo " "
@@ -52,10 +52,16 @@ for repository in "${REPOSITORIES[@]}"; do
     REPO_NAME=${REPO_INFO[0]}
     echo "Repository name: [$REPO_NAME]"
 
+    echo "Determining default branch name"
+    DEFAULT_BRANCH_NAME=$(curl -X GET -H "Accept: application/vnd.github.v3+json" --silent "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}" | jq '.default_branch')
+    echo "Default branch name: [$DEFAULT_BRANCH_NAME]"
+
     # determine branch name
-    BRANCH_NAME="master"
+    echo "Determining instructed branch name"
     if [ ${REPO_INFO[1]+yes} ]; then
         BRANCH_NAME="${REPO_INFO[1]}"
+    else
+        BRANCH_NAME="$DEFAULT_BRANCH_NAME"
     fi
     echo "Branch: [$BRANCH_NAME]"
 
@@ -63,14 +69,14 @@ for repository in "${REPOSITORIES[@]}"; do
     REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${REPO_NAME}.git"
     GIT_PATH="${TEMP_PATH}${REPO_NAME}"
     echo "Cloning [$REPO_URL] to [$GIT_PATH]"
-    git clone --quiet --no-hardlinks --no-tags --depth 1 $REPO_URL $REPO_NAME
+    git clone --quiet --no-hardlinks --no-tags --depth 1 $REPO_URL $GIT_PATH
 
     cd $GIT_PATH
 
     # checkout the branch, if specified
-    if [ "$BRANCH_NAME" != "master" ]; then
+    if [ "$BRANCH_NAME" != "$DEFAULT_BRANCH_NAME" ]; then
         # try to check out the origin, if fails, then create the local branch
-        git fetch && git checkout $BRANCH_NAME && git pull || git checkout -b $BRANCH_NAME
+        git fetch && git checkout -b "$BRANCH_NAME" origin/"$BRANCH_NAME" || git checkout -b "$BRANCH_NAME"
     fi
 
     echo " "
@@ -134,9 +140,9 @@ for repository in "${REPOSITORIES[@]}"; do
     # push changes
     echo "Push changes to [${REPO_URL}]"
     git push $REPO_URL
-    if [ "$BRANCH_NAME" != "master" -a "$PULL_REQUEST" == "true" ]; then
-        echo "Creating pull request"
-        jq -n --arg title "File sync from ${GITHUB_REPOSITORY}" --arg head "$BRANCH_NAME" --arg base "master" '{title:$title,head:$head,base:$base}' | curl -d @- \
+    if [ ! -z "$PULL_REQUEST_BRANCH_NAME" -a "$BRANCH_NAME" != "$PULL_REQUEST_BRANCH_NAME" ]; then
+        echo "Creating pull request from [$BRANCH_NAME] into [$PULL_REQUEST_BRANCH_NAME]"
+        jq -n --arg title "File sync from ${GITHUB_REPOSITORY}" --arg head "$BRANCH_NAME" --arg base $PULL_REQUEST_BRANCH_NAME '{title:$title,head:$head,base:$base}' | curl -d @- \
             -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -u ${USERNAME}:${GITHUB_TOKEN} \
