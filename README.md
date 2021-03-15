@@ -58,8 +58,10 @@ jobs:
 | --- | --- | --- |
 | REPOSITORIES | true | List of repositories to sync the files to. Optionally provide branch name |
 | FILES | true | List of files to sync across repositories. See below for details |
-| TOKEN | true | Personal Access Token with Repo scope |
 | PULL_REQUEST_BRANCH_NAME | false | Branch name of branch to do pull request into. Default is no pull request opened |
+| GIT_EMAIL | false | Git email to use |
+| GIT_USERNAME | false | Git username to use |
+| TOKEN | true | Personal Access Token with Repo scope |
 
 ## Examples
 ### REPOSITORIES parameter

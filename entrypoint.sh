@@ -23,6 +23,10 @@ FILES=($RAW_FILES)
 echo "Files           : $FILES"
 PULL_REQUEST_BRANCH_NAME="$INPUT_PULL_REQUEST_BRANCH_NAME"
 echo "Pull request    : $PULL_REQUEST_BRANCH_NAME"
+GIT_EMAIL="$INPUT_GIT_EMAIL"
+echo "Git email       : $GIT_EMAIL"
+GIT_USERNAME="$GIT_USERNAME"
+echo "Git username    : $GIT_USERNAME"
 
 # set temp path
 TEMP_PATH="/ghafs/"
@@ -38,7 +42,7 @@ echo " "
 echo "Initializing git with github-actions[bot]"
 git config --system core.longpaths true
 git config --global core.longpaths true
-git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com" && git config --global user.name "github-actions[bot]"
+git config --global user.email "$GIT_EMAIL" && git config --global user.name "$GIT_USERNAME"
 echo "Git initialized"
 
 echo " "

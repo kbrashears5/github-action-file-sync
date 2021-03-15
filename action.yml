@@ -18,6 +18,14 @@ inputs:
     description: 'Branch name to submit pull request to'
     required: false
     default: ''
+  GIT_EMAIL:
+    description: 'Email to use for Git'
+    required: false
+    default: '41898282+github-actions[bot]@users.noreply.github.com'
+  GIT_USERNAME:
+    description: 'Username to use for Git'
+    required: false
+    default: 'github-actions[bot]'
 
 runs:
   using: 'docker'
