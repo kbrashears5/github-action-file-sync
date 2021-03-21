@@ -57,7 +57,7 @@ for repository in "${REPOSITORIES[@]}"; do
     echo "Repository name: [$REPO_NAME]"
 
     echo "Determining default branch name"
-    DEFAULT_BRANCH_NAME=$(curl -X GET -H "Accept: application/vnd.github.v3+json" --silent "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}" | jq '.default_branch')
+    DEFAULT_BRANCH_NAME=$(curl -X GET -H "Accept: application/vnd.github.v3+json" --silent "${GITHUB_API_URL}/repos/${REPO_NAME}" | jq '.default_branch')
     echo "Default branch name: [$DEFAULT_BRANCH_NAME]"
 
     # determine branch name
@@ -73,7 +73,7 @@ for repository in "${REPOSITORIES[@]}"; do
     REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${REPO_NAME}.git"
     GIT_PATH="${TEMP_PATH}${REPO_NAME}"
     echo "Cloning [$REPO_URL] to [$GIT_PATH]"
-    git clone --quiet --no-hardlinks --no-tags --depth 1 $REPO_URL $GIT_PATH
+    git clone --quiet --no-hardlinks --no-tags $REPO_URL $GIT_PATH
 
     cd $GIT_PATH
 
@@ -151,7 +151,7 @@ for repository in "${REPOSITORIES[@]}"; do
             -H "Accept: application/vnd.github.v3+json" \
             -u ${USERNAME}:${GITHUB_TOKEN} \
             --silent \
-            ${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/pulls
+            ${GITHUB_API_URL}/repos/${REPO_NAME}/pulls
     fi
     cd $TEMP_PATH
     rm -rf $REPO_NAME
