@@ -57,7 +57,7 @@ for repository in "${REPOSITORIES[@]}"; do
     echo "Repository name: [$REPO_NAME]"
 
     echo "Determining default branch name"
-    DEFAULT_BRANCH_NAME=$(curl -X GET -H "Accept: application/vnd.github.v3+json" -u ${USERNAME}:${GITHUB_TOKEN} --silent "${GITHUB_API_URL}/repos/${REPO_NAME}" | jq '.default_branch')
+    DEFAULT_BRANCH_NAME=$(curl -X GET -H "Accept: application/vnd.github.v3+json" -u ${USERNAME}:${GITHUB_TOKEN} --silent "${GITHUB_API_URL}/repos/${REPO_NAME}" | jq -r '.default_branch')
     echo "Default branch name: [$DEFAULT_BRANCH_NAME]"
 
     # determine branch name
