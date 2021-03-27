@@ -57,7 +57,7 @@ for repository in "${REPOSITORIES[@]}"; do
     echo "Repository name: [$REPO_NAME]"
 
     echo "Determining default branch name"
-    DEFAULT_BRANCH_NAME=$(curl -X GET -H "Accept: application/vnd.github.v3+json" --silent "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}" | jq '.default_branch')
+    DEFAULT_BRANCH_NAME=$(curl -X GET -H "Accept: application/vnd.github.v3+json" -u ${USERNAME}:${GITHUB_TOKEN} --silent "${GITHUB_API_URL}/repos/${REPO_NAME}" | jq -r '.default_branch')
     echo "Default branch name: [$DEFAULT_BRANCH_NAME]"
 
     # determine branch name
@@ -73,7 +73,7 @@ for repository in "${REPOSITORIES[@]}"; do
     REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${REPO_NAME}.git"
     GIT_PATH="${TEMP_PATH}${REPO_NAME}"
     echo "Cloning [$REPO_URL] to [$GIT_PATH]"
-    git clone --quiet --no-hardlinks --no-tags --depth 1 $REPO_URL $GIT_PATH
+    git clone --quiet --no-hardlinks --no-tags $REPO_URL $GIT_PATH
 
     cd $GIT_PATH
 
@@ -84,7 +84,7 @@ for repository in "${REPOSITORIES[@]}"; do
     fi
 
     echo " "
-
+    need_push=false
     # loop through all files
     for file in "${FILES[@]}"; do
         echo "File: [${file}]"
@@ -130,6 +130,7 @@ for repository in "${REPOSITORIES[@]}"; do
             if [ "$(git status --porcelain)" != "" ]; then
                 echo "Committing changes"
                 git commit -m "File sync from ${GITHUB_REPOSITORY}"
+                need_push=true
             else
                 echo "Files not changed: [${SOURCE_FILE_NAME}]"
             fi
@@ -139,20 +140,23 @@ for repository in "${REPOSITORIES[@]}"; do
         echo " "
     done
 
-    cd ${GIT_PATH}
+    if [ "$need_push" = true ] ; then
+        cd ${GIT_PATH}
 
-    # push changes
-    echo "Push changes to [${REPO_URL}]"
-    git push $REPO_URL
-    if [ ! -z "$PULL_REQUEST_BRANCH_NAME" -a "$BRANCH_NAME" != "$PULL_REQUEST_BRANCH_NAME" ]; then
-        echo "Creating pull request from [$BRANCH_NAME] into [$PULL_REQUEST_BRANCH_NAME]"
-        jq -n --arg title "File sync from ${GITHUB_REPOSITORY}" --arg head "$BRANCH_NAME" --arg base $PULL_REQUEST_BRANCH_NAME '{title:$title,head:$head,base:$base}' | curl -d @- \
-            -X POST \
-            -H "Accept: application/vnd.github.v3+json" \
-            -u ${USERNAME}:${GITHUB_TOKEN} \
-            --silent \
-            ${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/pulls
+        # push changes
+        echo "Push changes to [${REPO_URL}]"
+        git push $REPO_URL
+        if [ ! -z "$PULL_REQUEST_BRANCH_NAME" -a "$BRANCH_NAME" != "$PULL_REQUEST_BRANCH_NAME" ]; then
+            echo "Creating pull request from [$BRANCH_NAME] into [$PULL_REQUEST_BRANCH_NAME]"
+            jq -n --arg title "File sync from ${GITHUB_REPOSITORY}" --arg head "$BRANCH_NAME" --arg base $PULL_REQUEST_BRANCH_NAME '{title:$title,head:$head,base:$base}' | curl -d @- \
+                -X POST \
+                -H "Accept: application/vnd.github.v3+json" \
+                -u ${USERNAME}:${GITHUB_TOKEN} \
+                --silent \
+                ${GITHUB_API_URL}/repos/${REPO_NAME}/pulls
+        fi
     fi
+   
     cd $TEMP_PATH
     rm -rf $REPO_NAME
     echo "Completed [${REPO_NAME}]"
