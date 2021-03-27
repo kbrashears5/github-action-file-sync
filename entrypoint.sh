@@ -155,9 +155,9 @@ for repository in "${REPOSITORIES[@]}"; do
                 --silent \
                 ${GITHUB_API_URL}/repos/${REPO_NAME}/pulls
         fi
-        cd $TEMP_PATH
     fi
    
+    cd $TEMP_PATH
     rm -rf $REPO_NAME
     echo "Completed [${REPO_NAME}]"
     echo "::endgroup::"
