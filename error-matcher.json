@@ -1,7 +1,7 @@
 {
     "problemMatcher": [
         {
-            "owner": "genericError",
+            "owner": "error1",
             "pattern": [
                 {
                     "regexp": "^(.*error: .*)$",
@@ -10,7 +10,7 @@
             ]
         },
         {
-            "owner": "gitRemoteRejectedError",
+            "owner": "error2",
             "pattern": [
                 {
                     "regexp": "^.*(\\[remote rejected\\] .*)$",
@@ -19,19 +19,10 @@
             ]
         },
         {
-            "owner": "copyError",
+            "owner": "error3",
             "pattern": [
                 {
-                    "regexp": "^.*cp: can't stat .*$",
-                    "message": 1
-                }
-            ]
-        },
-        {
-            "owner": "gitRepoError",
-            "pattern": [
-                {
-                    "regexp": "^.*fatal: not a git repository .*$",
+                    "regexp": "^.*(cp: can't stat .*)$",
                     "message": 1
                 }
             ]
