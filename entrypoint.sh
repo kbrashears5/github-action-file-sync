@@ -47,6 +47,8 @@ echo "Git initialized"
 
 echo " "
 
+PUSH_ARGS=""
+
 # loop through all the repos
 for repository in "${REPOSITORIES[@]}"; do
     echo "::group::$repository"
@@ -81,6 +83,11 @@ for repository in "${REPOSITORIES[@]}"; do
     if [ "$BRANCH_NAME" != "$DEFAULT_BRANCH_NAME" ]; then
         # try to check out the origin, if fails, then create the local branch
         git fetch && git checkout -b "$BRANCH_NAME" origin/"$BRANCH_NAME" || git checkout -b "$BRANCH_NAME"
+        if [ ! -z "$PULL_REQUEST_BRANCH_NAME" ]; then
+          echo "Making hard reset back to Pull Requset target branch before applying sync"
+          git reset --hard origin/$PULL_REQUEST_BRANCH_NAME
+          PUSH_ARGS="--force"
+        fi
     fi
 
     echo " "
@@ -145,7 +152,7 @@ for repository in "${REPOSITORIES[@]}"; do
 
         # push changes
         echo "Push changes to [${REPO_URL}]"
-        git push $REPO_URL
+        git push $PUSH_ARGS $REPO_URL
         if [ ! -z "$PULL_REQUEST_BRANCH_NAME" -a "$BRANCH_NAME" != "$PULL_REQUEST_BRANCH_NAME" ]; then
             echo "Creating pull request from [$BRANCH_NAME] into [$PULL_REQUEST_BRANCH_NAME]"
             jq -n --arg title "File sync from ${GITHUB_REPOSITORY}" --arg head "$BRANCH_NAME" --arg base $PULL_REQUEST_BRANCH_NAME '{title:$title,head:$head,base:$base}' | curl -d @- \
@@ -156,7 +163,7 @@ for repository in "${REPOSITORIES[@]}"; do
                 ${GITHUB_API_URL}/repos/${REPO_NAME}/pulls
         fi
     fi
-   
+
     cd $TEMP_PATH
     rm -rf $REPO_NAME
     echo "Completed [${REPO_NAME}]"
