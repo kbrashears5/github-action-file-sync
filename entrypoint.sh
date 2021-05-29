@@ -47,11 +47,13 @@ echo "Git initialized"
 
 echo " "
 
-PUSH_ARGS=""
 
 # loop through all the repos
 for repository in "${REPOSITORIES[@]}"; do
     echo "::group::$repository"
+
+    # extra arguments to use when pushing changes
+    PUSH_ARGS=""
 
     # determine repo name
     REPO_INFO=($(echo $repository | tr "@" "\n"))
