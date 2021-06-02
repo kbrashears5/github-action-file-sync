@@ -23,6 +23,8 @@ FILES=($RAW_FILES)
 echo "Files           : $FILES"
 PULL_REQUEST_BRANCH_NAME="$INPUT_PULL_REQUEST_BRANCH_NAME"
 echo "Pull request    : $PULL_REQUEST_BRANCH_NAME"
+PULL_REQUEST_LABEL="$INPUT_PULL_REQUEST_LABEL"
+echo "PR label        : $PULL_REQUEST_LABEL"
 GIT_EMAIL="$INPUT_GIT_EMAIL"
 echo "Git email       : $GIT_EMAIL"
 GIT_USERNAME="$INPUT_GIT_USERNAME"
@@ -47,7 +49,6 @@ echo "Git initialized"
 
 echo " "
 
-
 # loop through all the repos
 for repository in "${REPOSITORIES[@]}"; do
     echo "::group::$repository"
@@ -59,6 +60,9 @@ for repository in "${REPOSITORIES[@]}"; do
     REPO_INFO=($(echo $repository | tr "@" "\n"))
     REPO_NAME=${REPO_INFO[0]}
     echo "Repository name: [$REPO_NAME]"
+
+    REPO_NAME_SPLIT=($(echo $REPO_NAME | tr "/" "\n"))
+    ORG_NAME=${REPO_NAME_SPLIT[0]}
 
     echo "Determining default branch name"
     DEFAULT_BRANCH_NAME=$(curl -X GET -H "Accept: application/vnd.github.v3+json" -u ${USERNAME}:${GITHUB_TOKEN} --silent "${GITHUB_API_URL}/repos/${REPO_NAME}" | jq -r '.default_branch')
@@ -163,6 +167,27 @@ for repository in "${REPOSITORIES[@]}"; do
                 -u ${USERNAME}:${GITHUB_TOKEN} \
                 --silent \
                 ${GITHUB_API_URL}/repos/${REPO_NAME}/pulls
+
+            if [ ! -z "$PULL_REQUEST_LABEL" ]; then
+                # Find the newly created or preexisting pull request
+                EXISTING_PULL_REQUEST=$(curl \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    -u ${USERNAME}:${GITHUB_TOKEN} \
+                    --silent \
+                    "${GITHUB_API_URL}/repos/${REPO_NAME}/pulls?head=${ORG_NAME}:${BRANCH_NAME}&base=${PULL_REQUEST_BRANCH_NAME}" | jq '.[0]')
+
+                if [ ! -z "$EXISTING_PULL_REQUEST" ]; then
+                    # Use the pull request's number to add the PR label to it
+                    PR_NUMBER=$(echo $EXISTING_PULL_REQUEST | jq '.number')
+                    echo "Applying label [$PULL_REQUEST_LABEL] to created PR #$PR_NUMBER"
+                    curl -X POST \
+                      -H "Accept: application/vnd.github.v3+json" \
+                      -u ${USERNAME}:${GITHUB_TOKEN} \
+                      --silent \
+                      --data '{"labels": ["'${PULL_REQUEST_LABEL}'"]}' \
+                      ${GITHUB_API_URL}/repos/${REPO_NAME}/issues/${PR_NUMBER}/labels
+                fi
+            fi
         fi
     fi
 

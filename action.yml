@@ -18,6 +18,10 @@ inputs:
     description: 'Branch name to submit pull request to'
     required: false
     default: ''
+  PULL_REQUEST_LABEL:
+    description: 'Label to apply to any created pull request'
+    required: false
+    default: ''
   GIT_EMAIL:
     description: 'Email to use for Git'
     required: false
