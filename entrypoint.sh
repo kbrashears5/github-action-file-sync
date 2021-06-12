@@ -23,6 +23,8 @@ FILES=($RAW_FILES)
 echo "Files           : $FILES"
 PULL_REQUEST_BRANCH_NAME="$INPUT_PULL_REQUEST_BRANCH_NAME"
 echo "Pull request    : $PULL_REQUEST_BRANCH_NAME"
+PULL_REQUEST_LABEL="$INPUT_PULL_REQUEST_LABEL"
+echo "PR label        : $PULL_REQUEST_LABEL"
 GIT_EMAIL="$INPUT_GIT_EMAIL"
 echo "Git email       : $GIT_EMAIL"
 GIT_USERNAME="$INPUT_GIT_USERNAME"
@@ -51,10 +53,16 @@ echo " "
 for repository in "${REPOSITORIES[@]}"; do
     echo "::group::$repository"
 
+    # extra arguments to use when pushing changes
+    PUSH_ARGS=""
+
     # determine repo name
     REPO_INFO=($(echo $repository | tr "@" "\n"))
     REPO_NAME=${REPO_INFO[0]}
     echo "Repository name: [$REPO_NAME]"
+
+    REPO_NAME_SPLIT=($(echo $REPO_NAME | tr "/" "\n"))
+    ORG_NAME=${REPO_NAME_SPLIT[0]}
 
     echo "Determining default branch name"
     DEFAULT_BRANCH_NAME=$(curl -X GET -H "Accept: application/vnd.github.v3+json" -u ${USERNAME}:${GITHUB_TOKEN} --silent "${GITHUB_API_URL}/repos/${REPO_NAME}" | jq -r '.default_branch')
@@ -81,6 +89,11 @@ for repository in "${REPOSITORIES[@]}"; do
     if [ "$BRANCH_NAME" != "$DEFAULT_BRANCH_NAME" ]; then
         # try to check out the origin, if fails, then create the local branch
         git fetch && git checkout -b "$BRANCH_NAME" origin/"$BRANCH_NAME" || git checkout -b "$BRANCH_NAME"
+        if [ ! -z "$PULL_REQUEST_BRANCH_NAME" ]; then
+          echo "Making hard reset back to Pull Requset target branch before applying sync"
+          git reset --hard origin/$PULL_REQUEST_BRANCH_NAME
+          PUSH_ARGS="--force"
+        fi
     fi
 
     echo " "
@@ -145,7 +158,7 @@ for repository in "${REPOSITORIES[@]}"; do
 
         # push changes
         echo "Push changes to [${REPO_URL}]"
-        git push $REPO_URL
+        git push $PUSH_ARGS $REPO_URL
         if [ ! -z "$PULL_REQUEST_BRANCH_NAME" -a "$BRANCH_NAME" != "$PULL_REQUEST_BRANCH_NAME" ]; then
             echo "Creating pull request from [$BRANCH_NAME] into [$PULL_REQUEST_BRANCH_NAME]"
             jq -n --arg title "File sync from ${GITHUB_REPOSITORY}" --arg head "$BRANCH_NAME" --arg base $PULL_REQUEST_BRANCH_NAME '{title:$title,head:$head,base:$base}' | curl -d @- \
@@ -154,9 +167,30 @@ for repository in "${REPOSITORIES[@]}"; do
                 -u ${USERNAME}:${GITHUB_TOKEN} \
                 --silent \
                 ${GITHUB_API_URL}/repos/${REPO_NAME}/pulls
+
+            if [ ! -z "$PULL_REQUEST_LABEL" ]; then
+                # Find the newly created or preexisting pull request
+                EXISTING_PULL_REQUEST=$(curl \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    -u ${USERNAME}:${GITHUB_TOKEN} \
+                    --silent \
+                    "${GITHUB_API_URL}/repos/${REPO_NAME}/pulls?head=${ORG_NAME}:${BRANCH_NAME}&base=${PULL_REQUEST_BRANCH_NAME}" | jq '.[0]')
+
+                if [ ! -z "$EXISTING_PULL_REQUEST" ]; then
+                    # Use the pull request's number to add the PR label to it
+                    PR_NUMBER=$(echo $EXISTING_PULL_REQUEST | jq '.number')
+                    echo "Applying label [$PULL_REQUEST_LABEL] to created PR #$PR_NUMBER"
+                    curl -X POST \
+                      -H "Accept: application/vnd.github.v3+json" \
+                      -u ${USERNAME}:${GITHUB_TOKEN} \
+                      --silent \
+                      --data '{"labels": ["'${PULL_REQUEST_LABEL}'"]}' \
+                      ${GITHUB_API_URL}/repos/${REPO_NAME}/issues/${PR_NUMBER}/labels
+                fi
+            fi
         fi
     fi
-   
+
     cd $TEMP_PATH
     rm -rf $REPO_NAME
     echo "Completed [${REPO_NAME}]"
