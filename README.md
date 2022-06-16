@@ -61,7 +61,7 @@ jobs:
 | PULL_REQUEST_BRANCH_NAME | false | Branch name of branch to do pull request into. Default is no pull request opened |
 | GIT_EMAIL | false | Git email to use |
 | GIT_USERNAME | false | Git username to use |
-| TOKEN | true | Personal Access Token with Repo scope |
+| TOKEN | true | Personal Access Token with repo scope, and workflow scope if managing Actions-related files |
 
 ## Examples
 ### REPOSITORIES parameter
