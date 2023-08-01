@@ -1,14 +1,7 @@
-<h1 align="center">github-action-file-sync</h1>
-
-
-<div align="center">
-
-<b>Github Action to sync files across repos</b>
+# github-action-file-sync
+Github Action to sync files across repos
 
 [![version](https://img.shields.io/github/v/release/kbrashears5/github-action-file-sync)](https://img.shields.io/github/v/release/kbrashears5/github-action-file-sync)
-[![Build Status](https://dev.azure.com/kbrashears5/github/_apis/build/status/kbrashears5.github-action-file-sync?branchName=main)](https://dev.azure.com/kbrashears5/github/_build/latest?definitionId=28&branchName=main)
-
-</div>
 
 
 # Use Cases
