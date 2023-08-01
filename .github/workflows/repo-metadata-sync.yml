@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fetching Local Repository
-        uses: actions/checkout@main
+        uses: actions/checkout@v3
       - name: Repo Sync
-        uses: kbrashears5/github-action-repo-sync@main
+        uses: kbrashears5/github-action-repo-sync@v2.0.0
         with:
           TYPE: npm
           PATH: metadata.json
