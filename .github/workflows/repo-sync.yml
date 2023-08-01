@@ -1,4 +1,4 @@
-name: Repo Sync
+name: Repo Metadata Sync
 
 on:
   push:
@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fetching Local Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
       - name: Repo Sync
-        uses: kbrashears5/github-action-repo-sync@v1
+        uses: kbrashears5/github-action-repo-sync@main
         with:
           TYPE: npm
           PATH: metadata.json
