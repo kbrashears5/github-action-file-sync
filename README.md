@@ -6,7 +6,7 @@
 <b>Github Action to sync files across repos</b>
 
 [![version](https://img.shields.io/github/v/release/kbrashears5/github-action-file-sync)](https://img.shields.io/github/v/release/kbrashears5/github-action-file-sync)
-[![Build Status](https://dev.azure.com/kbrashears5/github/_apis/build/status/kbrashears5.github-action-file-sync?branchName=master)](https://dev.azure.com/kbrashears5/github/_build/latest?definitionId=28&branchName=master)
+[![Build Status](https://dev.azure.com/kbrashears5/github/_apis/build/status/kbrashears5.github-action-file-sync?branchName=main)](https://dev.azure.com/kbrashears5/github/_build/latest?definitionId=28&branchName=main)
 
 </div>
 
@@ -14,17 +14,17 @@
 # Use Cases
 Great for keeping your files in sync across multiple repositories. A good use case for me was the `.github/dependabot.yml` files.
 
-I have a master repo where these are synced from, and then they are kept in sync with the master repository.
+I have a main repo where these are synced from, and then they are kept in sync with the main repository.
 
-If I need to make a change, rather than go make a change x many times across all my repositories, I make the change once, and on push to the master repository, all my child repositories are updated. 
+If I need to make a change, rather than go make a change x many times across all my repositories, I make the change once, and on push to the main repository, all my child repositories are updated. 
 
-Another example is if you're creating new Github Actions for a repository, you can make them once, check them into master repository, and then deploy them all across all your repositories all at once. 
+Another example is if you're creating new Github Actions for a repository, you can make them once, check them into main repository, and then deploy them all across all your repositories all at once. 
 
 This also isn't limited to Github Action yaml files - another use case could be keeping the `.editorconfig`, `LICENSE`, `tsconfig.json`, `eslintrc.yml`, `.gitignore`, `azure-pieplines.yml`, etc. in sync across all your repositories.
 
-If I have a file that gets out of sync for whatever reason, the cron side of the `on` will take care of putting it back in sync with the master repository.
+If I have a file that gets out of sync for whatever reason, the cron side of the `on` will take care of putting it back in sync with the main repository.
 
-See my [master sync repo](https://github.com/kbrashears5/kbrashears5) for examples on how I use it across all my repositories.
+See my [main sync repo](https://github.com/kbrashears5/kbrashears5) for examples on how I use it across all my repositories.
 
 # Setup
 Create a new file called `/.github/workflows/file-sync.yml` that looks like so:
@@ -34,7 +34,7 @@ name: File Sync
 on:
   push:
     branches:
-      - master
+      - main
   schedule:
     - cron: 0 0 * * *
 
@@ -43,12 +43,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fetching Local Repository
-        uses: actions/checkout@master
+        uses: actions/checkout@main
       - name: File Sync
         uses: kbrashears5/github-action-file-sync@v2.0.0
         with:
           REPOSITORIES: |
-            username/repo@master
+            username/repo@main
           FILES: |
             sync/dependabot.yml=.github/dependabot.yml
           TOKEN: ${{ secrets.ACTIONS }}
@@ -65,7 +65,7 @@ jobs:
 
 ## Examples
 ### REPOSITORIES parameter
-Push to the `master` branch
+Push to the `main` branch
 ```yaml
 REPOSITORIES: |
     username/repo
